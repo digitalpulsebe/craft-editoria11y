@@ -1,0 +1,79 @@
+{# @var plugin \digitalpulsebe\editorially\Editorially #}
+{# @var settings \digitalpulsebe\editorially\models\Settings #}
+
+{% import '_includes/forms.twig' as forms %}
+
+<h2>Enable globally</h2>
+
+<p>
+    Use these settings to enable Editoria11y for all users with permission <em>"Use Editoria11y by global configuration"</em>.<br>
+    Users with permission <em>"Start Editoria11y sessions manually"</em> can also start sessions manually.
+</p>
+
+{{ forms.lightswitchField({
+    label: "Enable on site requests",
+    id: "enableOnSiteRequests",
+    name: "enableOnSiteRequests",
+    on: settings.enableOnSiteRequests,
+    errors: settings.getErrors("enableOnSiteRequests"),
+}) }}
+
+{{ forms.lightswitchField({
+    label: "Enable on preview requests",
+    id: "enableOnPreviewRequests",
+    name: "enableOnPreviewRequests",
+    on: settings.enableOnPreviewRequests,
+    errors: settings.getErrors("enableOnPreviewRequests"),
+}) }}
+
+<h2>Config for Editoria11y</h2>
+
+<p>
+    Read the
+    <a href="https://editoria11y.princeton.edu/configuration/#parameters" target="_blank">official documentation</a>
+    for accepted parameters.
+</p>
+
+<div class="json-field">
+    {{ forms.textareaField({
+        label: "Load script",
+        instructions: "customize loading of `const ed11y = new Ed11y({})`",
+        id: "scriptConfig",
+        name: "scriptConfig",
+        value: settings.scriptConfig,
+        rows: 10,
+        errors: settings.getErrors("scriptConfig"),
+    }) }}
+</div>
+
+{% do craft.app.view.registerAssetBundle('craft\\web\\assets\\codemirror\\CodeMirrorAsset') %}
+
+{% js %}
+(() => {
+    const textarea = document.getElementById('settings-scriptConfig');
+    const init = () => {
+        const editor = CodeMirror.fromTextArea(textarea, {
+            mode: {
+                name: 'javascript',
+                json: true
+            },
+            viewportMargin: Infinity,
+            readOnly: false,
+            theme: 'default'
+        });
+        editor.on('change', (editor) => {
+            console.log('change', editor.getValue());
+            editor.save();
+        });
+    };
+
+    const intersectionObserver = new IntersectionObserver((entries) => {
+        // was the field just made visible?
+        if (entries[0].intersectionRatio !== 0) {
+            intersectionObserver.disconnect();
+            init();
+        }
+    });
+    intersectionObserver.observe(textarea);
+})();
+{% endjs %}

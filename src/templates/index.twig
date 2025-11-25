@@ -1,0 +1,50 @@
+{% extends "_layouts/cp" %}
+
+{% set title = 'Editoria11y' %}
+
+{% set crumbs = [
+    { label: 'Editoria11y', url: url('editoria11y') },
+] %}
+
+{% set plugin = craft.app.plugins.getPlugin('editoria11y') %}
+{% set settings = plugin.settings %}
+{% set sessions = plugin.sessions %}
+{% set isActive = false %}
+
+{% block content %}
+    <div class="main">
+        <h2>Accessibility checker</h2>
+
+        {% if false and currentUser.can('enableEditoria11y') %}
+            {% set isActive = true %}
+        {% elseif currentUser.can('startEditoria11ySession') %}
+            {% set isActive = sessions.isActive %}
+
+            {% if isActive %}
+                <button class="btn submit">stop session</button>
+            {% else %}
+                <button class="btn submit">start session</button>
+            {% endif %}
+
+        {% else %}
+            <p>You have no permission to use Editoria11y.</p>
+        {% endif %}
+
+        {% if isActive %}
+            <p>
+                {% if settings.enableOnSiteRequests %}
+                    <span class="status live"></span> Editoria11y is enabled for site requests.
+                {% else %}
+                    <span class="status disabled"></span> Editoria11y is disabled for site requests.
+                {% endif %}
+            </p>
+            <p>
+                {% if settings.enableOnPreviewRequests %}
+                    <span class="status live"></span> Editoria11y is enabled for preview requests.
+                {% else %}
+                    <span class="status disabled"></span> Editoria11y is disabled for preview requests.
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{
+  "name": "digitalpulsebe/craft-editoria11y",
+  "description": "Editoria11y Accessibility Checker",
+  "type": "craft-plugin",
+  "license": "mit",
+  "support": {
+    "email": "support@digitalpulse.be",
+    "issues": "https://github.com/digitalpulsebe/craft-editoria11y/issues?state=open",
+    "source": "https://github.com/digitalpulsebe/craft-editoria11y",
+    "docs": "https://github.com/digitalpulsebe/craft-editoria11y",
+    "rss": "https://github.com/digitalpulsebe/craft-editoria11y/releases.atom"
+  },
+  "require": {
+    "php": ">=8.2",
+    "craftcms/cms": "^5.7.0"
+  },
+  "require-dev": {
+    "craftcms/phpstan": "dev-main"
+  },
+  "autoload": {
+    "psr-4": {
+      "digitalpulsebe\\editorially\\": "src/"
+    }
+  },
+  "extra": {
+    "handle": "editoria11y",
+    "name": "Editoria11y",
+    "developer": "Digital Pulse nv",
+    "documentationUrl": "https://github.com/digitalpulsebe/craft-editoria11y",
+    "class": "digitalpulsebe\\editorially\\Editorially"
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "8.2"
+    },
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
+}
