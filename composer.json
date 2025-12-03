@@ -2,7 +2,8 @@
   "name": "digitalpulsebe/craft-editoria11y",
   "description": "Editoria11y Accessibility Checker",
   "type": "craft-plugin",
-  "license": "mit",
+  "keywords": ["accessibility", "accessibility checker", "automated testing", "quality assurance", "seo"],
+  "license": "MIT",
   "support": {
     "email": "support@digitalpulse.be",
     "issues": "https://github.com/digitalpulsebe/craft-editoria11y/issues?state=open",
@@ -24,8 +25,8 @@
   },
   "extra": {
     "handle": "editoria11y",
-    "name": "Editoria11y",
-    "developer": "Digital Pulse nv",
+    "name": "Editoria11y Accessibility Checker",
+    "developer": "Digital Pulse",
     "documentationUrl": "https://github.com/digitalpulsebe/craft-editoria11y",
     "class": "digitalpulsebe\\editorially\\Editorially"
   },
