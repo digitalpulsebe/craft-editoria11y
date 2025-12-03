@@ -40,6 +40,15 @@ class Editorially extends Plugin
         ];
     }
 
+    public function getCpNavItem(): ?array
+    {
+        $config = parent::getCpNavItem();
+
+        $config['label'] = 'Editoria11y'; // short name
+
+        return $config;
+    }
+
     public function init(): void
     {
         parent::init();
