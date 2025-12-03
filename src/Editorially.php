@@ -12,7 +12,8 @@ use craft\services\UserPermissions;
 use craft\web\View;
 use digitalpulsebe\editorially\assets\EditoriallyVendorBundle;
 use digitalpulsebe\editorially\models\Settings;
-use digitalpulsebe\editorially\services\SessionService;use yii\base\Event;
+use digitalpulsebe\editorially\services\SessionService;
+use yii\base\Event;
 
 /**
  * Editoria11y plugin
