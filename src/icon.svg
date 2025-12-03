@@ -1,15 +1,1 @@
-<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-
-    <!-- Outer blue ring -->
-    <circle cx="60" cy="60" r="52" fill="#3a6ea5"/>
-
-    <!-- White ring (simulated border) -->
-    <circle cx="60" cy="60" r="46" fill="#ffffff"/>
-
-    <!-- Inner blue circle -->
-    <circle cx="60" cy="60" r="40" fill="#3a6ea5"/>
-
-    <!-- Check mark -->
-    <path d="M45 60 L55 70 L75 50" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-
-</svg>
+<svg fill="none" height="303" viewBox="0 0 303 303" width="303" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="27.05" x2="275.7" y1="27.05" y2="275.7"><stop offset="0" stop-color="#3650dc"/><stop offset=".02" stop-color="#354fd6"/><stop offset=".1" stop-color="#324bc4"/><stop offset=".19" stop-color="#3049b8"/><stop offset=".28" stop-color="#3049b5"/><stop offset=".67" stop-color="#182456"/><stop offset=".89" stop-color="#0b0f1e"/><stop offset="1" stop-color="#0b0b0b"/></linearGradient><clipPath id="b"><path d="m0 0h302.75v302.75h-302.75z"/></clipPath><g clip-path="url(#b)"><path d="m210.39 0h-118.03c-51.009 0-92.36 41.351-92.36 92.36v118.03c0 51.009 41.351 92.36 92.36 92.36h118.03c51.009 0 92.36-41.351 92.36-92.36v-118.03c0-51.009-41.351-92.36-92.36-92.36z" fill="url(#a)"/><circle cx="151.45" cy="151.45" r="92.45" stroke="#fff" stroke-width="10"/><path d="m141.305 163.981c1.27-3.346 10.872-27.736 19.751-41.325 8.88-13.59 24.092-6.901 24.092-6.901-23.671 16.517-41.002 74.855-41.002 74.855-12.57-24.096-26.394-36.676-26.394-36.676s10.497-8.443 17.324.76c5.818 7.84 6.229 9.287 6.229 9.287z" fill="#fff"/></g></svg>
