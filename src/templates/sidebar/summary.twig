@@ -1,0 +1,68 @@
+{#{% import '_includes/forms.twig' as forms %}#}
+
+{% do view.registerAssetBundle("digitalpulsebe\\editorially\\assets\\EditoriallyVendorBundle") %}
+
+<fieldset>
+    <legend class="h6">Accessibility checks</legend>
+    <div class="meta">
+
+        <div class="field">
+            <div class="heading" style="flex:1">
+                Warnings found:
+                <span id="editoria11y-check-result">...</span>
+                <craft-tooltip placement="bottom" max-width="200" text="Does not check non-saved changes" delay="1000">
+                    <button type="button" class="prevent-autofocus" data-icon="info" aria-label="Does not check non-saved changes" style="pointer-events: auto;">
+                    </button>
+                </craft-tooltip>
+            </div>
+            <div class="input" style="flex:0">
+                <a href="{{ actionUrl('editoria11y/session/start', {redirect: element.url}) }}" target="_blank" title="Start accessibility check in new tab">
+                    <span data-icon="external"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<div id="editoria11y-check-container" style="height:0; overflow:hidden;"></div>
+
+<script type="application/javascript">
+    window.addEventListener('load', () => {
+        fetch('{{ element.url }}')
+            .then(function(response) {
+                if (!response.ok) {
+                    return null;
+                }
+                return response.text();
+            })
+            .then(function(html) {
+                let container = document.getElementById('editoria11y-check-container');
+                container.innerHTML = html;
+
+                if (html === null) {
+                    document.getElementById('editoria11y-check-result').parentElement.innerHTML = "Unable to check accessibility.";
+                } else {
+                    new Ed11y({
+                        checkRoots: '#editoria11y-check-container',
+                        checkVisible: false,
+                        alertMode: "headless",
+                    });
+
+                    // Listen for the results event
+                    document.addEventListener('ed11yResults', function() {
+                        const errorCount = ''+Ed11y.results.length
+                        const resultSpan = document.getElementById('editoria11y-check-result');
+
+                        resultSpan.innerHTML = "<strong>"+errorCount+"</strong>";
+
+                        if (errorCount > 0) {
+                            resultSpan.parentElement.parentElement.setAttribute('style', 'background-color: #fad859;');
+                        }
+                    }, { once: true });
+                }
+            })
+            .catch(function(err) {
+                console.error('Failed to fetch preview or run check:', err);
+            });
+    })
+</script>

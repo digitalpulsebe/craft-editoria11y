@@ -11,6 +11,10 @@ class SessionController extends Controller
     {
         Editorially::getInstance()->sessions->start();
 
+        if ($this->request->get('redirect')) {
+            return $this->redirect($this->request->get('redirect'));
+        }
+
         return $this->redirectToPostedUrl();
     }
 

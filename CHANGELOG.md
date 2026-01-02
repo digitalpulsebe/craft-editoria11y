@@ -1,5 +1,11 @@
 # Release Notes for Editoria11y
 
+## Unreleased
+
+### Added
+
+- Sidebar widget for Entries in the control panel
+
 ## 1.0.1 - 2025-12-03
 
 ### Changed

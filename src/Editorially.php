@@ -3,8 +3,11 @@
 namespace digitalpulsebe\editorially;
 
 use Craft;
+use craft\base\Element;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\elements\Entry;
+use craft\events\DefineHtmlEvent;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
@@ -57,6 +60,7 @@ class Editorially extends Plugin
         Craft::$app->onInit(function() {
             $this->registerPermissions();
             $this->registerScripts();
+            $this->registerSidebarHtml();
         });
     }
 
@@ -99,6 +103,30 @@ class Editorially extends Plugin
         );
     }
 
+    private function registerSidebarHtml(): void
+    {
+        Event::on(
+            Entry::class,
+            Element::EVENT_DEFINE_SIDEBAR_HTML,
+            function (DefineHtmlEvent $event) {
+                /** @var Entry $element */
+                $entry = $event->sender;
+
+                $hasPermission = Craft::$app->user->checkPermission('enableEditoria11y')
+                    || Craft::$app->user->checkPermission('startEditoria11ySession');
+
+                if ($entry->url && $hasPermission) {
+                    $template = Craft::$app->getView()->renderTemplate('editoria11y/sidebar/summary', [
+                        "element" => $entry,
+                        "plugin" => $this
+                    ]);
+                    $event->html .= $template;
+                }
+
+            }
+        );
+    }
+
     private function registerScripts(): void
     {
         if ($this->shouldRegisterScripts()) {
@@ -130,7 +158,6 @@ class Editorially extends Plugin
                 }
             );
         }
-
     }
 
     protected function shouldRegisterScripts(): bool
