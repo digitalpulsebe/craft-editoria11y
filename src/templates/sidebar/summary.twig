@@ -28,41 +28,59 @@
 
 <script type="application/javascript">
     window.addEventListener('load', () => {
-        fetch('{{ element.url }}')
-            .then(function(response) {
-                if (!response.ok) {
-                    return null;
-                }
-                return response.text();
-            })
-            .then(function(html) {
-                let container = document.getElementById('editoria11y-check-container');
-                container.innerHTML = html;
+        const resultSpan = document.getElementById('editoria11y-check-result');
 
-                if (html === null) {
-                    document.getElementById('editoria11y-check-result').parentElement.innerHTML = "Unable to check accessibility.";
-                } else {
+        fetch('{{ element.url }}')
+            .then(response => response.ok ? response.text() : null)
+            .then(function(html) {
+                if (!html) {
+                    resultSpan.parentElement.innerHTML = "Unable to reach preview.";
+                    return;
+                }
+
+                // 1. Parse string into a real DOM object
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // 2. Efficiently remove unwanted elements
+                const toRemove = doc.querySelectorAll('script, head, iframe, noscript, style');
+                toRemove.forEach(el => el.remove());
+
+                // 3. Extract the 'lang' attribute!
+                // Important: WCAG requires a lang attribute. Ed11y checks this.
+                const pageLang = doc.documentElement.getAttribute('lang') || 'en';
+
+                const container = document.getElementById('editoria11y-check-container');
+                container.setAttribute('lang', pageLang);
+                container.innerHTML = doc.body.innerHTML;
+
+                // 4. Run Editoria11y
+                if (typeof Ed11y !== 'undefined') {
                     new Ed11y({
                         checkRoots: '#editoria11y-check-container',
-                        checkVisible: false,
                         alertMode: "headless",
                     });
 
-                    // Listen for the results event
                     document.addEventListener('ed11yResults', function() {
-                        const errorCount = ''+Ed11y.results.length
-                        const resultSpan = document.getElementById('editoria11y-check-result');
-
-                        resultSpan.innerHTML = "<strong>"+errorCount+"</strong>";
+                        // Ed11y.errors specifically counts 'Red' critical issues
+                        // Ed11y.results contains all issues (including warnings)
+                        const errorCount = Ed11y.results.length;
+                        resultSpan.innerHTML = `<strong>${errorCount}</strong>`;
 
                         if (errorCount > 0) {
-                            resultSpan.parentElement.parentElement.setAttribute('style', 'background-color: #fad859;');
+                            // Apply warning style to the wrapper
+                            const fieldWrapper = resultSpan.closest('.field');
+                            if (fieldWrapper) {
+                                fieldWrapper.style.backgroundColor = '#fee2e2'; // --red-100
+                                fieldWrapper.style.borderLeft = '4px solid #dc2626'; // --red-600
+                            }
                         }
                     }, { once: true });
                 }
             })
-            .catch(function(err) {
-                console.error('Failed to fetch preview or run check:', err);
+            .catch(err => {
+                console.error('Ed11y Error:', err);
+                resultSpan.innerText = 'Error';
             });
     })
 </script>
