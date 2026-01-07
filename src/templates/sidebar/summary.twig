@@ -2,7 +2,7 @@
 
 {% do view.registerAssetBundle("digitalpulsebe\\editorially\\assets\\EditoriallyVendorBundle") %}
 
-<fieldset>
+<fieldset id="editoria11y-widget">
     <legend class="h6">Accessibility checks</legend>
     <div class="meta">
         {% set previewParamValue = craft.app.security.hashData(craft.app.security.generateRandomString) %}
@@ -10,7 +10,7 @@
             'elementType': 'craft\\elements\\Entry',
             'canonicalId': element.canonicalId,
             'siteId': element.siteId,
-            'draftId': element.draftId ?? null,
+            'draftId': element.isProvisionalDraft ? null : element.draftId ?? null,
             'revisionId': element.revisionId ?? null,
             'userId': currentUser.id,
         }]) %}
