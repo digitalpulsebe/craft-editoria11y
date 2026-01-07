@@ -5,18 +5,28 @@
 <fieldset>
     <legend class="h6">Accessibility checks</legend>
     <div class="meta">
+        {% set previewParamValue = craft.app.security.hashData(craft.app.security.generateRandomString) %}
+        {% set previewToken = craft.app.tokens.createPreviewToken(["preview/preview", {
+            'elementType': 'craft\\elements\\Entry',
+            'canonicalId': element.canonicalId,
+            'siteId': element.siteId,
+            'draftId': element.draftId ?? null,
+            'revisionId': element.revisionId ?? null,
+            'userId': currentUser.id,
+        }]) %}
+        {% set previewUrl = siteUrl(element.url, {'x-craft-preview': previewParamValue, 'token': previewToken}) %}
 
         <div class="field">
             <div class="heading" style="flex:1">
                 Warnings found:
                 <span id="editoria11y-check-result">...</span>
-                <craft-tooltip placement="bottom" max-width="200" text="Does not check non-saved changes" delay="1000">
-                    <button type="button" class="prevent-autofocus" data-icon="info" aria-label="Does not check non-saved changes" style="pointer-events: auto;">
+                <craft-tooltip placement="bottom" max-width="200" text="Since last reload" delay="1000">
+                    <button type="button" class="prevent-autofocus" data-icon="info" aria-label="Since last reload" style="pointer-events: auto;">
                     </button>
                 </craft-tooltip>
             </div>
             <div class="input" style="flex:0">
-                <a href="{{ actionUrl('editoria11y/session/start', {redirect: element.url}) }}" target="_blank" title="Start accessibility check in new tab">
+                <a href="{{ actionUrl('editoria11y/session/start', {redirect: previewUrl}) }}" target="_blank" title="Start accessibility check in new tab">
                     <span data-icon="external"></span>
                 </a>
             </div>
@@ -24,13 +34,11 @@
     </div>
 </fieldset>
 
-<div id="editoria11y-check-container" style="height:0; overflow:hidden;"></div>
-
 <script type="application/javascript">
     window.addEventListener('load', () => {
         const resultSpan = document.getElementById('editoria11y-check-result');
 
-        fetch('{{ element.url }}')
+        fetch('{{ previewUrl }}')
             .then(response => response.ok ? response.text() : null)
             .then(function(html) {
                 if (!html) {
@@ -50,7 +58,16 @@
                 // Important: WCAG requires a lang attribute. Ed11y checks this.
                 const pageLang = doc.documentElement.getAttribute('lang') || 'en';
 
-                const container = document.getElementById('editoria11y-check-container');
+                let container = document.getElementById('editoria11y-check-container');
+
+                if (container === null) {
+                    // create container
+                    container = document.createElement('div');
+                    container.setAttribute('id', 'editoria11y-check-container');
+                    container.setAttribute('style', 'height:0; overflow:hidden;');
+                    document.body.appendChild(container);
+                }
+
                 container.setAttribute('lang', pageLang);
                 container.innerHTML = doc.body.innerHTML;
 
